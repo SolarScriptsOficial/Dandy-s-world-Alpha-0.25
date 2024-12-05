@@ -1,0 +1,135 @@
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
+local window = DrRayLibrary:Load("Dandy's World 0.20", "Default")
+
+-- Update Logs Tab
+local tabUpdateLogs = DrRayLibrary.newTab("🌐 • Update Logs", "rbxassetid://130669401533737")
+tabUpdateLogs.newButton("Added:", "New features added", function()
+    print('Update: New features added!')
+end)
+tabUpdateLogs.newButton("🏡 • Main", "Main section of the script", function()
+    print('Navigating to main...')
+end)
+tabUpdateLogs.newButton("🎚 • Auto Skill check", "Automatically performs skill checks", function()
+    print('Auto Skill Check started.')
+end)
+tabUpdateLogs.newButton("🕺 • Animations", "Under development", function()
+    print('Animations are still under development!')
+end)
+tabUpdateLogs.newButton("📒 • Version 0.25", "Third version", function()
+    print('Version 0.25 released.')
+end)
+
+-- Main Tab
+local tabMain = DrRayLibrary.newTab("🏡 • Main", "18335844068")
+tabMain.newButton("🔋 • Boost Yourself", "Boost your character using Shelly", function()
+    local player = game.Players.LocalPlayer
+    local args = {
+        player.Character,
+        CFrame.new(-179.298, 146.231, -164.615) * CFrame.Angles(3.1416, 0.4017, -3.1416),
+        player.Character
+    }
+    game:GetService("ReplicatedStorage").Events.AbilityEvent:InvokeServer(unpack(args))
+    print('Boosted yourself!')
+end)
+
+tabMain.newButton("🍓 • Heal Yourself", "Heals your character using Sprout", function()
+    local player = game.Players.LocalPlayer
+    local args = {
+        player.Character,
+        CFrame.new(-179.298, 146.231, -164.615) * CFrame.Angles(3.1416, 0.4017, -3.1416),
+        player.Character
+    }
+    game:GetService("ReplicatedStorage").Events.AbilityEvent:InvokeServer(unpack(args))
+    print('Healed yourself!')
+end)
+
+-- Speed hack - Optimized
+tabMain.newButton("🏃‍♂️➡️ • Speed hack", "Speed up your movement", function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    character.Humanoid.WalkSpeed = 30  -- Set speed once, no need for infinite loop.
+    print('Speed hack activated!')
+end)
+
+-- Auto Skill Check
+tabMain.newButton("🎚 • Auto Skill check", "Hits the gold area during skill checks", function()
+    local player = game.Players.LocalPlayer
+    local VirtualInputManager = game:GetService('VirtualInputManager')
+    
+    local TOLERANCE = 5  -- Tolerance for detecting skill check success
+
+    local function handleSkillCheck()
+        local screenGui = player.PlayerGui:WaitForChild("ScreenGui", 10)
+        if not screenGui then return end
+        
+        local menu = screenGui:FindFirstChild("Menu")
+        if not menu then return end
+        
+        local skillCheckFrame = menu:FindFirstChild("SkillCheckFrame")
+        if not skillCheckFrame then return end
+
+        -- Monitor visibility and perform skill check
+        local function onVisibilityChanged()
+            if skillCheckFrame.Visible then
+                local marker = skillCheckFrame:FindFirstChild("Marker")
+                local goldArea = skillCheckFrame:FindFirstChild("GoldArea")
+                
+                if marker and goldArea then
+                    local markerPosition = marker.AbsolutePosition
+                    local goldAreaPosition = goldArea.AbsolutePosition
+                    local goldAreaSize = goldArea.AbsoluteSize
+
+                    if markerPosition.X >= goldAreaPosition.X and markerPosition.X <= (goldAreaPosition.X + goldAreaSize.X + TOLERANCE) then
+                        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+                        print("Skill check passed with spacebar!")
+                    end
+                end
+            end
+        end
+
+        -- Detect skill check visibility changes
+        skillCheckFrame.Changed:Connect(function(property)
+            if property == "Visible" then
+                onVisibilityChanged()
+            end
+        end)
+    end
+
+    handleSkillCheck()
+    print('Auto Skill Check initialized!')
+end)
+
+-- Another Scripts Tab
+local tabAnotherScripts = DrRayLibrary.newTab("🤝 • Another Scripts", "ImageIdHere")
+tabAnotherScripts.newButton("ThebinModMenu", "By RodeStriker", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RodeStriker/TheDandyBinModMenu/refs/heads/main/Testing", true))()
+    print('Loaded ThebinModMenu!')
+end)
+
+tabAnotherScripts.newButton("Glisten's Animation Closet", "By RodeStriker", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RodeStriker/TheDandyHelper/refs/heads/main/GAC"))()
+    print('Loaded Glisten’s Animation Closet!')
+end)
+
+tabAnotherScripts.newButton("Admin Panel 0.4", "By Otvajni", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/VA4t52Ae"))()
+    print('Loaded Admin Panel 0.4!')
+end)
+
+-- Settings Tab
+local tabSettings = DrRayLibrary.newTab("⚙️ • Settings", "14134158045")
+tabSettings.newButton("Rejoin", "Rejoin the game", function()
+    local TeleportService = game:GetService("TeleportService")
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+
+    local function teleportToSameServer()
+        local placeId = game.PlaceId
+        local jobId = game.JobId
+        wait(1)
+        TeleportService:TeleportToPlaceInstance(placeId, jobId, player)
+    end
+
+    teleportToSameServer()
+    print('Rejoining the game!')
+end)
